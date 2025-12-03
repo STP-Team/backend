@@ -3,7 +3,7 @@ from stp_database.repo.STP import MainRequestsRepo
 
 from app.core.dependencies import get_repo
 
-router = APIRouter(prefix="/achievements", tags=["Achievements"])
+router = APIRouter(prefix="/api/achievements", tags=["Achievements"])
 
 
 @router.get("/")
