@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import ValidationError
 from stp_database.repo.STP import MainRequestsRepo
 
 from app.core.dependencies import get_repo
-from app.schemas.employee import EmployeeRead, EmployeeAll, EmployeeCreate
+from app.schemas.employee import EmployeeAll, EmployeeCreate, EmployeeRead
 
 router = APIRouter(prefix="/api/employees", tags=["Employees"])
 
@@ -127,6 +127,45 @@ async def create_employee(
                 "timestamp": datetime.now().isoformat(),
                 "path": str(request.url.path),
                 "message": "Внутренняя ошибка сервера при создании сотрудника",
+                "errorCode": "INTERNAL_SERVER_ERROR",
+            },
+        )
+
+
+@router.delete(
+    "/",
+    name="Удалить сотрудника",
+    description="Удаляет сотрудника из базы",
+    status_code=status.HTTP_200_OK,
+)
+async def delete_employee(
+    request: Request,
+    user_id: int,
+    repo: MainRequestsRepo = Depends(get_repo),
+):
+    try:
+        deleted_count = await repo.employee.delete_user(user_id=user_id)
+
+        if deleted_count <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="No one deleted"
+            )
+
+        return deleted_count
+
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Ошибка валидации входных данных: {e}",
+        )
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "timestamp": datetime.now().isoformat(),
+                "path": str(request.url.path),
+                "message": "Внутренняя ошибка сервера при удалении сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
         )
