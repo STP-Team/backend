@@ -4,9 +4,9 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import ValidationError
 
-from app.core.db import RepoDep
-from app.schemas.employee import (
-    EmployeeList,
+from backend.core.db import RepoDep
+from backend.schemas.employee import (
+    EmployeesList,
     EmployeeDTO,
     PatchEmployeeDTO,
 )
@@ -24,9 +24,9 @@ router = APIRouter(
     status_code=status.HTTP_200_OK,
     responses={
         404: {"description": "Not found"},
-        400: {"description": "Server error"},
+        400: {"description": "Bad request"},
     },
-    response_model=EmployeeList,
+    response_model=EmployeesList,
 )
 async def get_employees(
     repo: RepoDep,
@@ -39,7 +39,7 @@ async def get_employees(
     roles: List[int] | None = Query(None, description="Роли"),
 ):
     try:
-        employees_data = await repo.employee.get_users(
+        employees = await repo.employee.get_users(
             main_id=main_id,
             user_id=user_id,
             username=username,
@@ -49,21 +49,22 @@ async def get_employees(
             roles=roles,
         )
 
-        if not employees_data:
+        if not employees:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
             )
 
-        if not isinstance(employees_data, (list, tuple)):
-            employees_data = [employees_data]
+        if not isinstance(employees, (list, tuple)):
+            employees = [employees]
 
-        employees = [EmployeeDTO.model_validate(emp) for emp in employees_data]
+        employees = [EmployeeDTO.model_validate(emp) for emp in employees]
 
-        return EmployeeList(employees=employees)
+        return EmployeesList(employees=employees)
 
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Server error: {e}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Server error: {e}",
         )
 
 
@@ -156,7 +157,7 @@ async def patch_employee(
             detail={
                 "timestamp": datetime.now().isoformat(),
                 "path": str(request.url.path),
-                "message": "Внутренняя ошибка сервера при создании сотрудника",
+                "message": "Внутренняя ошибка сервера при обновлении сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
         )

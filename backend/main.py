@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.api import routers
-from app.core.config import load_config
+from backend.api import routers
+from backend.core.config import load_config
 
 config = load_config(".env")
 

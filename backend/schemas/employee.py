@@ -19,7 +19,7 @@ class EmployeeDTO(BaseModel):
         from_attributes = True
 
 
-class EmployeeList(BaseModel):
+class EmployeesList(BaseModel):
     employees: list[EmployeeDTO]
 
 

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from stp_database import create_engine, create_session_pool
 from stp_database.repo.STP import MainRequestsRepo
 
-from app.core.config import load_config
+from backend.core.config import load_config
 
 config = load_config(".env")
 engine = create_engine(config.db, db_name=config.db.db_name)
