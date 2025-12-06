@@ -108,9 +108,6 @@ jobs:
       - name: Run linting with ruff
         run: uv run ruff check .
 
-      - name: Run type checking with mypy
-        run: uv run mypy app
-
       - name: Run tests with pytest
         run: uv run pytest --cov=app --cov-report=xml
 

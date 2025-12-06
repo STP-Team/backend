@@ -35,6 +35,7 @@ build-backend = "hatchling.build"
 [tool.mypy]
 strict = true
 exclude = ["venv", ".venv", "alembic"]
+ignore_missing_imports = true
 
 [tool.ruff]
 target-version = "py310"

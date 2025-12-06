@@ -13,30 +13,30 @@ def parse_cors(v: Any) -> list[str] | str:
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str
-    OPENAPI_URL: str
+    PROJECT_NAME: str = "FastAPI App"
+    OPENAPI_URL: str = "/openapi.json"
     API_V1_STR: str = "/api/v1"
-    FRONTEND_HOST: str
+    FRONTEND_HOST: str = "http://localhost:3000"
 
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = []
 
     @computed_field
-    @property
     def all_cors_origins(self) -> list[str]:
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]
 
-    API_HOST: str
-    API_PORT: int
+    API_HOST: str = "0.0.0.0"
+    API_PORT: int = 8000
 
-    DB_HOST: str
-    DB_PORT: int
-    DB_USER: str
-    DB_PASS: str
-    DB_NAME: str
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_USER: str = "postgres"
+    DB_PASS: str = "postgres"
+    DB_NAME: str = "app_db"
+    SECRET_KEY: str = "dev-secret-key-change-in-production"
 
     model_config = SettingsConfigDict(
         env_file=".env",

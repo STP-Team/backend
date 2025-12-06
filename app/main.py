@@ -28,7 +28,7 @@ if settings.all_cors_origins:
 
 
 @app.get("/health")
-async def health():
+async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
