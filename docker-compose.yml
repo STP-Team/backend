@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/stp-team/backend:fix-package-build
+    image: ghcr.io/stp-team/backend:latest
     ports:
       - "127.0.0.1:${API_PORT}:8000"
     restart: unless-stopped
