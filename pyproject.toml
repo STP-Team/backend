@@ -2,7 +2,6 @@
 name = "backend"
 version = "1.0.0"
 description = ""
-readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "authx>=1.4.3",
@@ -77,3 +76,4 @@ show_contexts = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
+exclude = ["README.md", ".github/"]
