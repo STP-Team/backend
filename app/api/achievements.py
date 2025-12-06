@@ -3,9 +3,9 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import ValidationError
 
-from backend.core.db import RepoDep
-from backend.schemas.achievement import AchievementDTO, AchievementsList
-from backend.schemas.employee import PatchEmployeeDTO
+from app.core.db import RepoDep
+from app.schemas.achievement import AchievementDTO, AchievementsList
+from app.schemas.employee import PatchEmployeeDTO
 
 router = APIRouter(prefix="/api/achievements", tags=["Достижения"])
 

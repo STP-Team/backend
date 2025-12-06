@@ -8,6 +8,7 @@ from stp_database.repo.STP import MainRequestsRepo
 from backend.core.config import load_config
 
 config = load_config(".env")
+
 engine = create_engine(config.db, db_name=config.db.db_name)
 session_pool = create_session_pool(engine)
 
