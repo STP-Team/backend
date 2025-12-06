@@ -5,6 +5,30 @@ from sqlalchemy import URL
 
 
 @dataclass
+class APIConfig:
+    port: int
+    jwt_secret_key: str
+
+    @staticmethod
+    def from_env(env: Env):
+        """Создает объект DbConfig из переменных окружения.
+
+        Args:
+            env: Объект переменных окружения
+
+        Returns:
+            Собранный объект DbConfig
+        """
+        port = env.int("API_PORT")
+        jwt_secret_key = env.str("JWT_SECRET_KEY")
+
+        return APIConfig(
+            port=port,
+            jwt_secret_key=jwt_secret_key,
+        )
+
+
+@dataclass
 class DbConfig:
     """Класс конфигурации подключения к базам данных.
 
@@ -84,10 +108,12 @@ class Config:
 
     Attributes:
     ----------
+    api: Содержит настройки API сервера
     db: Содержит настройки подключения к базе данных
     """
 
-    db: DbConfig | None
+    api: APIConfig
+    db: DbConfig
 
 
 def load_config(path: str = None) -> Config:
@@ -105,5 +131,6 @@ def load_config(path: str = None) -> Config:
     env.read_env(path)
 
     return Config(
+        api=APIConfig.from_env(env),
         db=DbConfig.from_env(env),
     )

@@ -5,17 +5,16 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "authx>=1.4.3",
     "environs>=14.5.0",
     "fastapi[standard]>=0.123.5",
     "pydantic-settings>=2.12.0",
     "stp-database",
+    "urllib3>=2.5.0",
 ]
 
 [tool.uv.sources]
 stp-database = { git = "https://github.com/STP-Team/stp-database" }
-
-[tool.ruff.lint]
-select = ["D"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

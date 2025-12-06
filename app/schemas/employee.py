@@ -1,16 +1,16 @@
 from pydantic import BaseModel
 
 
-class EmployeeRead(BaseModel):
+class EmployeeDTO(BaseModel):
     id: int
+    fullname: str
+    role: int
     user_id: int | None
     username: str | None
     division: str | None
     position: str | None
-    fullname: str
     head: str | None
     email: str | None
-    role: int
     is_trainee: bool
     is_casino_allowed: bool
     is_exchange_banned: bool
@@ -20,4 +20,18 @@ class EmployeeRead(BaseModel):
 
 
 class EmployeeList(BaseModel):
-    employees: list[EmployeeRead]
+    employees: list[EmployeeDTO]
+
+
+class PatchEmployeeDTO(BaseModel):
+    fullname: str | None = None
+    role: int | None = None
+    user_id: int | None = None
+    username: str | None = None
+    division: str | None = None
+    position: str | None = None
+    head: str | None = None
+    email: str | None = None
+    is_trainee: bool | None = None
+    is_casino_allowed: bool | None = None
+    is_exchange_banned: bool | None = None

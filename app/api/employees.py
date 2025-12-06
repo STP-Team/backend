@@ -1,17 +1,20 @@
 from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import ValidationError
-from stp_database.repo.STP import MainRequestsRepo
 
-from app.core.dependencies import get_repo
+from app.core.db import RepoDep
 from app.schemas.employee import (
     EmployeeList,
-    EmployeeRead,
+    EmployeeDTO,
+    PatchEmployeeDTO,
 )
 
-router = APIRouter(prefix="/api/employees", tags=["Employees"])
+router = APIRouter(
+    prefix="/api/employees",
+    tags=["Сотрудники"],
+)
 
 
 @router.get(
@@ -26,6 +29,7 @@ router = APIRouter(prefix="/api/employees", tags=["Employees"])
     response_model=EmployeeList,
 )
 async def get_employees(
+    repo: RepoDep,
     main_id: int | None = Query(None, description="Основной идентификатор"),
     user_id: int | None = Query(None, description="Идентификатор Telegram"),
     username: str | None = Query(None, description="Имя пользователя Telegram"),
@@ -33,7 +37,6 @@ async def get_employees(
     email: str | None = Query(None, description="Рабочая почта"),
     head: str | None = Query(None, description="ФИО руководителя"),
     roles: List[int] | None = Query(None, description="Роли"),
-    repo: MainRequestsRepo = Depends(get_repo),
 ):
     try:
         employees_data = await repo.employee.get_users(
@@ -54,7 +57,7 @@ async def get_employees(
         if not isinstance(employees_data, (list, tuple)):
             employees_data = [employees_data]
 
-        employees = [EmployeeRead.model_validate(emp) for emp in employees_data]
+        employees = [EmployeeDTO.model_validate(emp) for emp in employees_data]
 
         return EmployeeList(employees=employees)
 
@@ -69,17 +72,17 @@ async def get_employees(
     name="Создать сотрудника",
     description="Создает нового сотрудника",
     status_code=status.HTTP_201_CREATED,
-    response_model=EmployeeRead,
+    response_model=EmployeeDTO,
 )
 async def create_employee(
     request: Request,
+    repo: RepoDep,
     division: str = Query(str, description="Направление сотрудника"),
     position: str = Query(str, description="Должность сотрудника"),
     fullname: str = Query(str, description="ФИО сотрудника"),
     head: str = Query(str, description="Руководитель сотрудника"),
     role: int = Query(0, description="Роль сотрудника"),
     user_id: int | None = Query(None, description="Идентификатор Telegram сотрудника"),
-    repo: MainRequestsRepo = Depends(get_repo),
 ):
     try:
         employee = await repo.employee.add_user(
@@ -117,6 +120,48 @@ async def create_employee(
         )
 
 
+@router.patch(
+    "/",
+    name="Изменить сотрудника",
+    description="Изменяет существующего сотрудника",
+    status_code=status.HTTP_200_OK,
+    response_model=EmployeeDTO,
+)
+async def patch_employee(
+    request: Request,
+    repo: RepoDep,
+    payload: PatchEmployeeDTO,
+    user_id: int = Query(int, description="Идентификатор Telegram сотрудника"),
+):
+    try:
+        employee = await repo.employee.get_users(user_id=user_id)
+
+        if not employee:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
+            )
+
+        update_data = payload.model_dump(exclude_unset=True)
+        updated = await repo.employee.update_user(user_id, **update_data)
+
+        return updated
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Ошибка валидации входных данных: {e}",
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "timestamp": datetime.now().isoformat(),
+                "path": str(request.url.path),
+                "message": "Внутренняя ошибка сервера при создании сотрудника",
+                "errorCode": "INTERNAL_SERVER_ERROR",
+            },
+        )
+
+
 @router.delete(
     "/",
     name="Удалить сотрудника",
@@ -124,9 +169,9 @@ async def create_employee(
 )
 async def delete_employee(
     request: Request,
+    repo: RepoDep,
     fullname: str | None = Query(None, description="ФИО сотрудника"),
     user_id: int | None = Query(None, description="Идентификатор Telegram сотрудника"),
-    repo: MainRequestsRepo = Depends(get_repo),
 ):
     try:
         deleted_count = await repo.employee.delete_user(
