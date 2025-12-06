@@ -46,7 +46,7 @@ async def get_achievements(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Server error: {e}",
-        )
+        ) from e
 
 
 @router.post(
@@ -97,7 +97,7 @@ async def create_achievement(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
 
     except Exception:
         raise HTTPException(
@@ -108,7 +108,7 @@ async def create_achievement(
                 "message": "Внутренняя ошибка сервера при создании достижения",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None
 
 
 @router.patch(
@@ -144,7 +144,7 @@ async def patch_achievement(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -154,7 +154,7 @@ async def patch_achievement(
                 "message": "Внутренняя ошибка сервера при обновлении достижения",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None
 
 
 @router.delete(
@@ -182,7 +182,7 @@ async def delete_achievement(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
 
     except Exception:
         raise HTTPException(
@@ -193,4 +193,4 @@ async def delete_achievement(
                 "message": "Внутренняя ошибка сервера при удалении сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None

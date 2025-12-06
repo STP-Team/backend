@@ -1,15 +1,10 @@
 from datetime import datetime
-from typing import List
 
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import ValidationError
 
-from backend.core.db import RepoDep
-from backend.schemas.employee import (
-    EmployeesList,
-    EmployeeDTO,
-    PatchEmployeeDTO,
-)
+from app.core.db import RepoDep
+from app.schemas.employee import EmployeeDTO, EmployeesList, PatchEmployeeDTO
 
 router = APIRouter(
     prefix="/api/employees",
@@ -36,7 +31,7 @@ async def get_employees(
     fullname: str | None = Query(None, description="ФИО"),
     email: str | None = Query(None, description="Рабочая почта"),
     head: str | None = Query(None, description="ФИО руководителя"),
-    roles: List[int] | None = Query(None, description="Роли"),
+    roles: list[int] | None = Query(None, description="Роли"),
 ):
     try:
         employees = await repo.employee.get_users(
@@ -65,7 +60,7 @@ async def get_employees(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Server error: {e}",
-        )
+        ) from e
 
 
 @router.post(
@@ -107,7 +102,7 @@ async def create_employee(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
 
     except Exception:
         raise HTTPException(
@@ -118,7 +113,7 @@ async def create_employee(
                 "message": "Внутренняя ошибка сервера при создании сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None
 
 
 @router.patch(
@@ -150,7 +145,7 @@ async def patch_employee(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -160,7 +155,7 @@ async def patch_employee(
                 "message": "Внутренняя ошибка сервера при обновлении сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None
 
 
 @router.delete(
@@ -190,7 +185,7 @@ async def delete_employee(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ошибка валидации входных данных: {e}",
-        )
+        ) from e
 
     except Exception:
         raise HTTPException(
@@ -201,4 +196,4 @@ async def delete_employee(
                 "message": "Внутренняя ошибка сервера при удалении сотрудника",
                 "errorCode": "INTERNAL_SERVER_ERROR",
             },
-        )
+        ) from None

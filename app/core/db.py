@@ -5,11 +5,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from stp_database import create_engine, create_session_pool
 from stp_database.repo.STP import MainRequestsRepo
 
-from backend.core.config import load_config
+from app.core.config import settings
 
-config = load_config(".env")
-
-engine = create_engine(config.db, db_name=config.db.db_name)
+engine = create_engine(
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    username=settings.DB_USER,
+    password=settings.DB_PASS,
+    db_name=settings.DB_NAME,
+)
 session_pool = create_session_pool(engine)
 
 
