@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import axios from 'axios';
+import {getCookie} from "@/lib/utils";
 
 interface UserInfo {
     user_id: number;
@@ -34,7 +35,7 @@ interface AuthProviderProps {
     children: React.ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [loading, setLoading] = useState(true);
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             const response = await axios.post(`http://localhost:8000/api/v1/auth/telegram`, authData);
 
-            const { access_token } = response.data;
+            const {access_token} = response.data;
 
             // Store token in cookies with actual token expiry
             const tokenExpiry = getTokenExpiryInDays(access_token);
@@ -155,17 +156,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const expires = new Date();
         expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
         document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-    };
-
-    const getCookie = (name: string): string | null => {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
     };
 
     const deleteCookie = (name: string) => {
