@@ -23,7 +23,7 @@ router = APIRouter(prefix="/achievements", tags=["Достижения"])
 )
 async def get_achievements(
     repo: RepoDep,
-    current_user: CurrentUserDep,
+    _current_user: CurrentUserDep,
     division: str | None = Query(None, description="Направление сотрудника"),
     achievement_id: int | None = Query(None, description="Идентификатор достижения"),
 ):
@@ -60,6 +60,7 @@ async def get_achievements(
 async def create_achievement(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     name: str = Query(str, description="Название достижения"),
     description: str = Query(str, description="Название достижения"),
     division: str = Query(
@@ -122,6 +123,7 @@ async def create_achievement(
 async def patch_achievement(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     payload: PatchEmployeeDTO,
     achievement_id: int = Query(int, description="Идентификатор достижения"),
 ):
@@ -166,6 +168,7 @@ async def patch_achievement(
 async def delete_achievement(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     achievement_id: int | None = Query(None, description="Идентификатор достижения"),
 ):
     try:

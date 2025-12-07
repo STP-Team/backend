@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import ValidationError
 
-from backend.api.deps import RepoDep
+from backend.api.deps import CurrentUserDep, RepoDep
 from backend.schemas.employee import EmployeeDTO, EmployeesList, PatchEmployeeDTO
 
 router = APIRouter(
@@ -73,6 +73,7 @@ async def get_employees(
 async def create_employee(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     division: str = Query(str, description="Направление сотрудника"),
     position: str = Query(str, description="Должность сотрудника"),
     fullname: str = Query(str, description="ФИО сотрудника"),
@@ -126,6 +127,7 @@ async def create_employee(
 async def patch_employee(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     payload: PatchEmployeeDTO,
     user_id: int = Query(int, description="Идентификатор Telegram сотрудника"),
 ):
@@ -166,6 +168,7 @@ async def patch_employee(
 async def delete_employee(
     request: Request,
     repo: RepoDep,
+    _current_user: CurrentUserDep,
     fullname: str | None = Query(None, description="ФИО сотрудника"),
     user_id: int | None = Query(None, description="Идентификатор Telegram сотрудника"),
 ):
