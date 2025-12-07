@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from stp_database import create_session_pool
 from stp_database.models.STP import Employee
@@ -29,7 +29,7 @@ security = HTTPBearer()
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(security)],
+    token: Annotated[HTTPAuthorizationCredentials, Depends(security)],
     repo: RepoDep,
 ):
     """Validate JWT token and return current user"""

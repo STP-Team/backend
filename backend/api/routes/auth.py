@@ -13,14 +13,6 @@ router = APIRouter(
 )
 
 
-async def validate_auth_user(user_id: int):
-    unauthed_ext = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, detail="no access"
-    )
-
-    raise unauthed_ext
-
-
 @router.post("/telegram", name="Авторизация через Telegram", response_model=TokenInfo)
 async def auth_telegram(auth_data: TelegramAuthData, repo: RepoDep):
     """
