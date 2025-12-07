@@ -72,6 +72,7 @@ dependencies = [
     { name = "environs" },
     { name = "fastapi", extra = ["standard"] },
     { name = "pydantic-settings" },
+    { name = "pyjwt", extra = ["crypto"] },
     { name = "stp-database" },
     { name = "urllib3" },
 ]
@@ -92,6 +93,7 @@ requires-dist = [
     { name = "environs", specifier = ">=14.5.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.123.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
+    { name = "pyjwt", extras = ["crypto"], specifier = ">=2.10.1" },
     { name = "stp-database", git = "https://github.com/STP-Team/stp-database" },
     { name = "urllib3", specifier = ">=2.5.0" },
 ]

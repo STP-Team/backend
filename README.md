@@ -38,3 +38,19 @@
   </tr>
 </tbody>
 </table>
+
+# Генерация ключей
+
+Приватный ключ
+
+```bash
+openssl genpkey -algorithm Ed25519 -out app/certs/private_key.pem
+```
+
+Публичный ключ:
+
+```bash
+openssl pkey -in app/certs/jwt_private.pem -pubout -out app/certs/jwt_public.pem
+```
+
+Ключи не должны быть в репозитории и хранятся в едином экземпляре на машине, где запускается backend

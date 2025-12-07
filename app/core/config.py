@@ -1,7 +1,10 @@
+from pathlib import Path
 from typing import Annotated, Any
 
-from pydantic import AnyUrl, BeforeValidator, computed_field
+from pydantic import AnyUrl, BaseModel, BeforeValidator, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = Path(__file__).parent.parent
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -10,6 +13,12 @@ def parse_cors(v: Any) -> list[str] | str:
     elif isinstance(v, list | str):
         return v
     raise ValueError(v)
+
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "EdDSA"
 
 
 class Settings(BaseSettings):
@@ -28,6 +37,8 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]
 
+    auth_jwt: AuthJWT = AuthJWT()
+
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
 
@@ -36,13 +47,13 @@ class Settings(BaseSettings):
     DB_USER: str = "postgres"
     DB_PASS: str = "postgres"
     DB_NAME: str = "app_db"
-    SECRET_KEY: str = "dev-secret-key-change-in-production"
 
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         env_ignore_empty=True,
         extra="ignore",
+        strict=True,
     )
 
 
