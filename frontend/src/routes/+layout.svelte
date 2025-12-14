@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Header from './Header.svelte';
     import './layout.css';
     import Footer from "./Footer.svelte";
 
@@ -7,9 +6,8 @@
 </script>
 
 <div class="app">
-    <Header/>
     <main>{@render children()}</main>
-    <Footer/>
+    <!-- <Footer/> -->
 </div>
 
 <style>

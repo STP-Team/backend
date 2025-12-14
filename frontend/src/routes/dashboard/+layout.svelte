@@ -3,8 +3,11 @@
 	import {goto} from '$app/navigation';
 	import {authActions, authStore} from '$lib/stores/auth.js';
 	import {getCurrentUser, getStoredToken, removeToken} from '$lib/auth.js';
+	import AppSidebar from '$lib/components/app-sidebar.svelte';
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import Header from '../Header.svelte';
 
-	let mounted = false;
+	let mounted = $state(false);
 
     onMount(async () => {
         mounted = true;
@@ -41,8 +44,8 @@
         }
     }
 
-    $: isAuthenticated = $authStore.isAuthenticated;
-    $: isLoading = $authStore.loading;
+    let isAuthenticated = $derived($authStore.isAuthenticated);
+    let isLoading = $derived($authStore.loading);
 </script>
 
 {#if isLoading}
@@ -53,5 +56,11 @@
         </div>
     </div>
 {:else if isAuthenticated && mounted}
-    <slot/>
+    <Sidebar.Provider>
+        <AppSidebar user={$authStore.user} />
+        <Sidebar.Inset>
+            <Header />
+            <slot />
+        </Sidebar.Inset>
+    </Sidebar.Provider>
 {/if}

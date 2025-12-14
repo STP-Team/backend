@@ -13,6 +13,8 @@
     } from '$lib/auth.js';
     import {FieldDescription,} from "$lib/components/ui/field/index.js";
     import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "$lib/components/ui/card/index.js";
+    import * as HoverCard from "$lib/components/ui/hover-card";
+    import * as Avatar from "$lib/components/ui/avatar";
 
     let mounted = $state(false);
     let authError = $state('');
@@ -100,8 +102,37 @@
         </div>
         <CardTitle class="text-2xl">Авторизация</CardTitle>
         <CardDescription>
-            Используйте Telegram аккаунт, привязанный к <a href="https://t.me/stpsher_bot"
-                                                           class="text-fg-brand hover:underline" target="_blank">@СТПшеру</a>
+            Используйте Telegram аккаунт, привязанный к
+            <HoverCard.Root>
+                <HoverCard.Trigger
+                    href="https://t.me/stpsher_bot"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    class="text-fg-brand rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                >
+                    @СТПшеру
+                </HoverCard.Trigger>
+                <HoverCard.Content class="w-80">
+                    <div class="flex justify-between space-x-4">
+                        <Avatar.Root>
+                            <Avatar.Image src="https://t.me/i/userpic/320/stpsher_bot.jpg" alt="СТПшер бот"/>
+                            <Avatar.Fallback>СТП</Avatar.Fallback>
+                        </Avatar.Root>
+                        <div class="space-y-1">
+                            <h4 class="text-sm font-semibold">@СТПшер</h4>
+                            <p class="text-sm">Графики, показатели, группы, игры</p>
+                            <div class="flex items-center pt-2">
+                                <svg class="me-2 size-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="text-muted-foreground text-xs">
+                                    Основной бот СТП
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </HoverCard.Content>
+            </HoverCard.Root>
         </CardDescription>
     </CardHeader>
     <CardContent class="space-y-6">
@@ -135,9 +166,36 @@
                 {/if}
 
                 <FieldDescription class="text-xs text-muted-foreground text-center">
-                    Если войти не удается - напишите в <a href="https://t.me/stp_helpbot"
-                                                          class="text-fg-brand hover:underline"
-                                                          target="_blank">@ХелпБот</a>
+                    Если войти не удается - напишите в <HoverCard.Root>
+                <HoverCard.Trigger
+                    href="https://t.me/stp_helpbot"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    class="text-fg-brand rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                >
+                    @ХелпБот
+                </HoverCard.Trigger>
+                <HoverCard.Content class="w-80">
+                    <div class="flex justify-between space-x-4">
+                        <Avatar.Root>
+                            <Avatar.Image src="https://t.me/i/userpic/320/stp_helpbot.jpg" alt="Хелп бот"/>
+                            <Avatar.Fallback>ХелпБот</Avatar.Fallback>
+                        </Avatar.Root>
+                        <div class="space-y-1">
+                            <h4 class="text-sm font-semibold">@ХелпБот</h4>
+                            <p class="text-sm">Бот для помощи в решении технических сложностей</p>
+                            <div class="flex items-center pt-2">
+                                <svg class="me-2 size-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="text-muted-foreground text-xs">
+                                    Вспомогательный бот СТП
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </HoverCard.Content>
+            </HoverCard.Root>
                 </FieldDescription>
             </div>
         {/if}

@@ -27,7 +27,7 @@ if settings.all_cors_origins:
     )
 
 
-@app.get("/health")
+@app.get("/api/v1/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
 
