@@ -35,6 +35,4 @@ async def health() -> dict[str, str]:
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:backend", host=settings.API_HOST, port=settings.API_PORT, reload=True
-    )
+    uvicorn.run("main:app", host=settings.API_HOST, port=settings.API_PORT, reload=True)

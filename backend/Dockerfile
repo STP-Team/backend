@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Python dependencies
 COPY --from=uv /uv /usr/local/bin/uv
-COPY ../pyproject.toml ../uv.lock* ./
+COPY pyproject.toml ../uv.lock* ./
 RUN uv sync --frozen --no-dev
 COPY . ./app/
 

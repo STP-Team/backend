@@ -13,6 +13,7 @@ router = APIRouter(
 )
 
 
+
 @router.post("/telegram", name="Авторизация через Telegram", response_model=TokenInfo)
 async def auth_telegram(auth_data: TelegramAuthData, repo: RepoDep):
     """
